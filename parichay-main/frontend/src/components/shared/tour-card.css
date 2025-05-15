@@ -1,0 +1,16 @@
+.btn_booking a{
+    background-color: #f6932d;
+     color:#ffffff;
+     font-weight: 600;
+     margin-bottom:0.5rem;
+     padding: 0.2rem ,0.5rem;
+
+}
+.btn_booking a:hover{
+ background-color: aquamarine;
+ color:black;
+
+}
+.btn_booking a:active{
+    transform:scale(1.5)
+}
