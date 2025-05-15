@@ -168,6 +168,8 @@ export const login = async (req, res) => {
       .cookie("accessToken", token, {
         httpOnly: true,
         expires: token.expiresIn, // 15 days
+        sameSite: "none",
+        secure:true,
       })
       .status(200)
       .json({
