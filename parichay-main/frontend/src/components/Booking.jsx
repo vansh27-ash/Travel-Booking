@@ -4,73 +4,115 @@ import { Navigate, useNavigate } from "react-router-dom";
 
 import { AuthContext } from "../context/AuthContext";
 import { BASE_URL } from "../utils/config";
+import useFetch from "../hooks/useFetch";
 
 const Booking = ({ tour, avgrating, totalrating }) => {
-  
-  const { reviews, price, maxGroupSize,title } = tour;
+  const { reviews, price, maxGroupSize, title } = tour;
   const { user } = useContext(AuthContext);
-    const [booking, setBooking] = useState({
-      userid: user && user._id,
-      userEmail: user && user.email,
-      tourName:title,
-      fullName: "",
-      phone: "",
-      guestSize: 1,
-      bookAt: "",
-      price:price,
-    });
-  
-  
-  
+  const [booking, setBooking] = useState({
+    userid: user && user._id,
+    userEmail: user && user.email,
+    tourName: title,
+    fullName: "",
+    phone: "",
+    guestSize: 1,
+    bookAt: "",
+    price: price,
+  });
 
-    const handleChange = (e) => {
-      setBooking((prev) => ({ ...prev, [e.target.id]: e.target.value }));
-      
+  const handleChange = (e) => {
+    setBooking((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
-    const today = new Date().toISOString().split("T")[0];
-    // send data to server
-  const navigate = useNavigate()
-  
-  
+  const today = new Date().toISOString().split("T")[0];
+  // send data to server
+  const navigate = useNavigate();
 
-    const handleClick = async e => {
-      e.preventDefault();
-      
-      try {
-        if (!user || user === undefined || user === null) {
-          return alert("Please sign in");
-        }
+  const handleClick = async (e) => {
+    e.preventDefault();
 
-        const res = await fetch(`${BASE_URL}booking/${booking.userid}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          }
-          , credentials: 'include',
-          body: JSON.stringify(booking)
-        });
-
-        
-        const result = await res.json();
-
-        if (!res.ok) {
-          return alert(result.message);
-        } 
-        navigate("/thank-you");
-      } catch (err) {
-        
-        alert(err.message)
+    try {
+      if (!user || user === undefined || user === null) {
+        return alert("Please sign in");
       }
-      
-      
-        
-  }
+      const amount = (
+        booking.guestSize *
+        (price + 500 + ((price + 500) * 18) / 100)
+      ).toFixed(0);
+      const key = await fetch(`${BASE_URL}payment/getkey`);
+      const data1 = await key.json();
+      const data = await fetch(`${BASE_URL}payment/process`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ amount }),
+      });
+      const orderData = await data.json()
+      const order=orderData.order
+      const options = {
+        key: data1.key, // Replace with your Razorpay key_id
+        amount: order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        currency: 'INR',
+        name: 'Bharat Darshan',
+        description: 'Test Transaction',
+        order_id: order.id, // This is the order_id created in the backend
+        handler: async function (response) {
+          const verifyRes = await fetch(`${BASE_URL}payment/verification`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(response),
+          });
   
+          const result = await verifyRes.json();
+          if (result.success) {
+            const res = await fetch(`${BASE_URL}booking/${booking.userid}`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: "include",
+              body: JSON.stringify(booking),
+            });
+      
+            const result = await res.json();
+      
+            if (!res.ok) {
+              return alert(result.message);
+            }
+            navigate("/thank-you");
+          } else {
+            alert('Payment failed!');
+          }
+        }, // Your success URL
+        prefill: {
+          name: 'Your name',
+          email: 'youremail@example.com',
+          contact: '9999999999'
+        },
+        theme: {
+          color: '#F37254'
+        },
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.open();
+      
+    
+
+      
+      
+      
+
+      
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
   const Total = (
-  booking.guestSize *
+    booking.guestSize *
     (price + 500 + ((price + 500) * 18) / 100)
   ).toFixed(0);
-
 
   return (
     <div className="border-2 border-gray-400 px-4 py-6 rounded-xl w-full max-w-3xl mx-auto bg-[#0f2a39]">
@@ -91,9 +133,7 @@ const Booking = ({ tour, avgrating, totalrating }) => {
           {totalrating === 0 ? (
             " Not Rated"
           ) : (
-              <span className="text-white">
-                ({reviews?.length})
-              </span>
+            <span className="text-white">({reviews?.length})</span>
           )}
         </span>
       </div>
@@ -172,8 +212,7 @@ const Booking = ({ tour, avgrating, totalrating }) => {
             <span className="font-semibold">Total Expenses</span>
             <span className="font-semibold text-xl">
               <i className="ri-money-rupee-circle-line text-[#f6932d]"></i>
-              {
-                Total}
+              {Total}
             </span>
           </li>
         </ul>
@@ -188,6 +227,6 @@ const Booking = ({ tour, avgrating, totalrating }) => {
       </div>
     </div>
   );
-}
+};
 
 export default Booking;

@@ -9,6 +9,7 @@ import SearchResult from '../pages/SearchResult'
 import Thankyou from '../pages/Thankyou';
 import Mybookings from '../pages/Mybookings';
 import UpdateUser from '../pages/UpdateUser'
+import ForgotPassword from '../pages/ForgotPassword';
 
 const Routespages = () => {
     return (
@@ -23,7 +24,9 @@ const Routespages = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/thank-you" element={<Thankyou />} />
             <Route path="/home/tour/search" element={<SearchResult />} />
-            <Route path="/edit-profile" element={<UpdateUser/>} />
+            <Route path="/edit-profile" element={<UpdateUser />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            
         </Routes>
 
     );

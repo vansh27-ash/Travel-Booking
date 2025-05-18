@@ -76,7 +76,7 @@ const Login = () => {
                 onChange={handleChange}
               />
             </div>
-            <div className="mb-6">
+            <div className="mb-2">
               <input
                 className="w-full px-4 py-2 border-b-2 border-gray-300 bg-transparent text-white focus:outline-none focus:border-[#f6932d] transition duration-200"
                 type="password"
@@ -85,6 +85,15 @@ const Login = () => {
                 id="password"
                 onChange={handleChange}
               />
+            </div>
+
+            <div className="text-right mb-6">
+              <Link
+                to="/forgot-password"
+                className="text-sm text-[#f6932d] hover:text-red-400 transition duration-200"
+              >
+                Forgot Password?
+              </Link>
             </div>
 
             <button
