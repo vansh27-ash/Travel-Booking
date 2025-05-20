@@ -299,7 +299,11 @@ export const login = async (req, res) => {
         httpOnly: true,
         expires: token.expiresIn, // 15 days
         sameSite: "none",
+<<<<<<< HEAD
         secure: true,
+=======
+        secure:true,
+>>>>>>> 14a482b2a29bda92f2215047f03c3b6dc38f13b8
       })
       .status(200)
       .json({
