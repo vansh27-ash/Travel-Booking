@@ -1,7 +1,15 @@
 import Tour from "../models/Tour.js";
 
-// create tour
 
+
+
+
+
+
+
+
+
+// create tour
 export const createTour = async (req, res) => {
     const { title, city, address } = req.body;
 
@@ -114,6 +122,34 @@ export const getAllTour = async (req, res) => {
     });
   }
 };
+
+// controllers/tourController.js
+export const getAllTours = async (req, res) => {
+  const page = parseInt(req.query.page) || 0;
+  const limit = 8;
+
+  try {
+    const total = await Tour.countDocuments();
+    const tours = await Tour.find({})
+      .populate("reviews")
+      .skip(page * limit)
+      .limit(limit);
+
+    res.status(200).json({
+      count: total,
+      success: true,
+      message: "Successfully fetched",
+      data: tours,
+    });
+  } catch (err) {
+    res.status(404).json({
+      success: false,
+      message: "No tours are created",
+    });
+  }
+};
+
+
 
 // handle search
 

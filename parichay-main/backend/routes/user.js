@@ -10,6 +10,7 @@ router.put("/:id",verifyuser,updateUser);
 router.delete("/:id",verifyuser, deleteUser);
 router.get("/:id",verifyuser, getSingleUser);
 router.get("/", verifyAdmin, getAllUser);
+// router.get("/", getAllUser); // for testing purposes of admin
 router.delete("/:userId/bookings/:bookingId",verifyuser, removeUserBooking);
 
 

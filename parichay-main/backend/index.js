@@ -47,7 +47,7 @@ const connect = async () => {
 app.use(express.json())
 app.use(cors(corsOptions))
 app.use(cookieParser())
-app.use("/api/v1/tour", tourRoute)
+app.use("/api/v1/tour", tourRoute);
 app.use("/api/v1/user", UserRoute)
 app.use("/api/v1/auth", authRoute)
 app.use("/api/v1/review", reviewRoute)
@@ -60,5 +60,5 @@ app.get("/", (req, res) => {
 
 app.listen(port, () => {
     connect()
-    console.log(port)
+    console.log("Sever is running at port", port);
 })
