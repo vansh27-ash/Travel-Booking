@@ -18,7 +18,7 @@ function App() {
       <BrowserRouter>
         <div className="flex bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
           <Sidebar />
-          <div className="flex-1 p-4">
+          <div className="ml-64 flex-1 p-4">
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/add" element={<AddPackage />} />
@@ -30,7 +30,6 @@ function App() {
               <Route path="/add-reviews" element={<AddReview />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
-
               <Route
                 path="*"
                 element={
